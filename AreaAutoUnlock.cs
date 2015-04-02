@@ -22,7 +22,7 @@ namespace AreaAutoUnlock
 
         public string Name
         {
-            get { return "TileAutoBuy"; }
+            get { return "AreaAutoUnlock"; }
         }
 
         public string Description
