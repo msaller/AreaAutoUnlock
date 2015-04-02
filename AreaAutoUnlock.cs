@@ -37,6 +37,10 @@ namespace AreaAutoUnlock
         {
             areas.maxAreaCount = 25;
         }
+        public override bool OnCanUnlockArea(int x, int z, bool originalResult)
+        {
+            return true;
+        }
     }
 
     public class AreaAutoUnlockLoadingExtension : LoadingExtensionBase
@@ -47,23 +51,26 @@ namespace AreaAutoUnlock
             if (mode != LoadMode.NewGame)
                 return;
 
+            // set unlockproperties to null temporarily so the unlock check won't fail
+            var propertiesTemp = UnlockManager.instance.m_properties;
+            UnlockManager.instance.m_properties = null;
+
             // buy tiles to 0, 0
-            this.managers.areas.UnlockArea(1, 2, false);
-            this.managers.areas.UnlockArea(0, 2, false);
-            this.managers.areas.UnlockArea(0, 1, false);
-            this.managers.areas.UnlockArea(0, 0, false);
+            GameAreaManager.instance.UnlockArea(7);
+            GameAreaManager.instance.UnlockArea(2);
+            GameAreaManager.instance.UnlockArea(1);
+            GameAreaManager.instance.UnlockArea(0);
 
             // buy the rest
             for (int x = 0; x <= 4; x++)
             {
                 for (int y = 0; y <= 4; y++)
                 {
-                    if (!this.managers.areas.IsAreaUnlocked(x, y))
-                    {
-                        this.managers.areas.UnlockArea(x, y, false);
-                    }
+                    GameAreaManager.instance.UnlockArea(x*5 + y);
                 }
             }
+
+            UnlockManager.instance.m_properties = propertiesTemp;
         }
     }
 }
